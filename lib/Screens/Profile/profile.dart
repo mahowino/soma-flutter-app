@@ -4,6 +4,7 @@ import 'package:flutter_auth/Screens/MySchedule/MySchedule.dart';
 import 'package:flutter_auth/Screens/SpecificCourse/SpecificCoursePage.dart';
 import 'package:flutter_auth/constants.dart';
 
+import '../CourseForm/postCourse.dart';
 import 'Widget/profile_list_item.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -83,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: (){
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => CourseViewer()),
+                        MaterialPageRoute(builder: (context) => MyCourses()),
                       );
                     },
                     child: ProfileListItem(
@@ -95,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: (){
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MyCourses()),
+                        MaterialPageRoute(builder: (context) => CoursePostForm()),
                       );
                     },
                     child: ProfileListItem(
