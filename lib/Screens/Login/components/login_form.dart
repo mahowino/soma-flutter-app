@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../components/already_have_an_account_acheck.dart';
 import '../../../constants.dart';
+import '../../MainPage/Mainpage.dart';
 import '../../Signup/signup_screen.dart';
 
 class LoginForm extends StatelessWidget {
@@ -11,10 +12,13 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController EmailController=TextEditingController();
+    TextEditingController PasswordController=TextEditingController();
     return Form(
       child: Column(
         children: [
           TextFormField(
+            controller: EmailController,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             cursorColor: kPrimaryColor,
@@ -30,13 +34,14 @@ class LoginForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: defaultPadding),
             child: TextFormField(
+              controller: PasswordController,
               textInputAction: TextInputAction.done,
               obscureText: true,
               cursorColor: kPrimaryColor,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Your password",
                 prefixIcon: Padding(
-                  padding: const EdgeInsets.all(defaultPadding),
+                  padding: EdgeInsets.all(defaultPadding),
                   child: Icon(Icons.lock),
                 ),
               ),
@@ -46,7 +51,28 @@ class LoginForm extends StatelessWidget {
           Hero(
             tag: "login_btn",
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                String email=EmailController.text.toString();
+                String password=PasswordController.text.toString();
+                String? error = validatePass(email,password);
+                if(error==null){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const MainPage();
+                      },
+                    ),
+                  );
+                }
+                else{
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(error),
+                  ));
+                }
+
+
+              },
               child: Text(
                 "Login".toUpperCase(),
               ),
@@ -68,5 +94,19 @@ class LoginForm extends StatelessWidget {
         ],
       ),
     );
+  }
+  String? validatePass(String email, String password) {
+    if (email.isEmpty) {
+      return "email is empty";
+    }
+    if (password.isEmpty) {
+      return "password is empty";
+    }
+
+    if (password.length < 8) {
+      return "password is too short";
+    }
+
+    return null;
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/constants.dart';
 import 'package:flutter_auth/responsive.dart';
+import '../../Data/User/User.dart';
+import '../../Data/User/userApi.dart';
 import '../../components/background.dart';
 import 'components/sign_up_top_image.dart';
 import 'components/signup_form.dart';
@@ -66,4 +68,6 @@ class MobileSignupScreen extends StatelessWidget {
       ],
     );
   }
+
+
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../Data/User/User.dart';
+import '../../Data/User/userApi.dart';
 import '../../constants.dart';
 import '../Profile/profile.dart';
 import '../SpecificCourse/SpecificCoursePage.dart';
@@ -171,6 +173,7 @@ class _MainPageState extends State<MainPage> {
         padding: EdgeInsets.only(left: 10.0,right: 10.0),
       child: InkWell(
         onTap: (){
+          signUp();
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -216,5 +219,15 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
     );
+  }
+  static Future<String?> signUp() async {
+    User user=User();
+    user.firstname="jamo";
+    user.lastname="msee";
+    user.password="1234";
+    user.email="jamoo@mama.com";
+    final response= await UserApiClass.create()?.signUpUser(user.toJson());
+
+    print(response!.body);
   }
 }
