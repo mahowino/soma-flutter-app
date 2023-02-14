@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DatePicker extends StatefulWidget {
 
@@ -40,28 +41,41 @@ class _State extends State<DatePicker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Select course date '),
-      ),
-      body: Container(
-          padding: EdgeInsets.all(32.0),
-          child: Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(_value),
-                  Text(_selectedTime)
-                  SizedBox(height: 20,),
-                  ElevatedButton(onPressed: _selectDate, child: Text('Choose date and time'),),
-                  SizedBox(height: 20,),
-               ElevatedButton(
-                  onPressed: _show, child: const Text('Show Time Picker')),
-                ],
+        appBar: AppBar(
+          title: Text('Select course date '),
+          actions: <Widget>[
+            IconButton(icon: const Icon(Icons.save), onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return DatePicker();
+                  },
+                ),
+              );
+            })
+          ],
+        ),
+        body: Container(
+            padding: EdgeInsets.all(32.0),
+            child: Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(_value),
+                    Text(_selectedTime),
+                    SizedBox(height: 20,),
+                    ElevatedButton(onPressed: _selectDate, child: Text('Choose date and time'),),
+                    SizedBox(height: 20,),
+                 ElevatedButton(
+                    onPressed: _show, child: const Text('Show Time Picker')),
+                  ],
+                ),
               ),
-            ),
-          )
-      ),
+            )
+        ),
+
     );
   }
 }

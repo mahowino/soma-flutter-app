@@ -17,11 +17,11 @@ abstract class UserApiClass extends ChopperService{
 
 
   @Post(path: "/register")
-  Future<Response>? signUpUser(
+  Future<Response> signUpUser(
       @Body() Map <String, dynamic> body,
       );
 
-  static UserApiClass? create(){
+  static UserApiClass create(){
 
     final client=ChopperClient(baseUrl: Uri.parse("https://soma.herokuapp.com/"),
         services: [

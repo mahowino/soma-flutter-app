@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../Data/User/User.dart';
+import '../../../Data/User/UserViewHolder.dart';
 import '../../../components/already_have_an_account_acheck.dart';
 import '../../../constants.dart';
 import '../../MainPage/Mainpage.dart';
@@ -51,19 +53,37 @@ class LoginForm extends StatelessWidget {
           Hero(
             tag: "login_btn",
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 String email=EmailController.text.toString();
                 String password=PasswordController.text.toString();
                 String? error = validatePass(email,password);
+
                 if(error==null){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const MainPage();
-                      },
-                    ),
-                  );
+                  User user=User();
+                  user.email=email;
+                  user.password=password;
+
+                  var response=await UserClient.logInUser(user.toJson());
+                  if(response==true){
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("successful sign in"),
+                    ));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context)  {
+
+                          return  MainPage();
+                        },
+                      ),
+                    );
+                  }
+                  else{
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Error, issue with credentials or network"),
+                    ));
+                  }
+
                 }
                 else{
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

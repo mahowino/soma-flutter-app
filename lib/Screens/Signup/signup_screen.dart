@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/constants.dart';
 import 'package:flutter_auth/responsive.dart';
+import 'package:provider/provider.dart';
 import '../../Data/User/User.dart';
 import '../../Data/User/userApi.dart';
 import '../../components/background.dart';

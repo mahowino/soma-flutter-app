@@ -4,7 +4,7 @@ class User {
   String? email;
   String? password;
 
-  User(){}
+  User();
 
   User.fromJson(Map<String, dynamic> json)
       : firstname = json['firstname'],
@@ -20,4 +20,11 @@ class User {
       'password': password,
     };
   }
+  Map<String, dynamic> toJsonLogIn() {
+    return {
+      'email': email,
+      'password': password,
+    };
+  }
+
 }
