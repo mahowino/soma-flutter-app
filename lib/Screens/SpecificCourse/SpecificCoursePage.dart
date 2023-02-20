@@ -1,15 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../constants.dart';
 import '../Profile/profile.dart';
+
 
 class CourseViewer extends StatefulWidget {
 
-  final heroTag;
-  final foodName;
-  final foodPrice;
+   final heroTag;
+   final courseName;
+   final courseDescription;
+   final courseCredits;
+   final courseDates;
 
-  CourseViewer({this.heroTag, this.foodName, this.foodPrice});
+
+  CourseViewer( this.heroTag, this.courseName, this.courseDescription,this.courseCredits,this.courseDates);
+
 
   @override
   State<CourseViewer> createState() => _CourseViewerState();
@@ -18,10 +24,11 @@ class CourseViewer extends StatefulWidget {
 class _CourseViewerState extends State<CourseViewer> {
   var selectedCard = 'WEIGHT';
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF7A9BEE),
+        backgroundColor: kPrimaryColor,
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
@@ -38,13 +45,7 @@ class _CourseViewerState extends State<CourseViewer> {
                   fontSize: 18.0,
                   color: Colors.white)),
           centerTitle: true,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.more_horiz),
-              onPressed: () {},
-              color: Colors.white,
-            )
-          ],
+
         ),
         body: ListView(children: [
           Stack(children: [
@@ -76,28 +77,29 @@ class _CourseViewerState extends State<CourseViewer> {
                         .size
                         .width)),
             Positioned(
-                top: 30.0,
+                top: 40.0,
                 left: (MediaQuery
                     .of(context)
                     .size
-                    .width / 2) - 100.0,
+                    .width / 2)-50,
                 child: Hero(
-                    tag: "hi",
+                    tag: "image",
                     child: Container(
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage('assets/images/user_icon_male.png'),
+                                image: AssetImage(widget.heroTag),
                                 fit: BoxFit.cover)),
-                        height: 200.0,
-                        width: 200.0))),
+                        height: 100,
+                        width: 100.0))
+            ),
             Positioned(
-                top: 250.0,
+                top: 150.0,
                 left: 25.0,
                 right: 25.0,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text("meee",
+                    Text(widget.courseName,
                         style: TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: 22.0,
@@ -110,9 +112,9 @@ class _CourseViewerState extends State<CourseViewer> {
                         child: ListView(
                           scrollDirection: Axis.vertical,
                           children: <Widget>[
-                            _buildInfoCard('WEIGHT', '300', 'G'),
+                            _buildInfoCard(widget.courseDescription, widget.courseDescription,widget.courseDates),
                             SizedBox(height: 10.0),
-                            _buildInfoCard('CALORIES', '267', 'CAL'),
+                          //  _buildInfoCard('CALORIES', '267', 'CAL'),
 
                           ],
                         )
@@ -121,14 +123,8 @@ class _CourseViewerState extends State<CourseViewer> {
                     Padding(
                       padding: EdgeInsets.only(bottom: 5.0),
                       child: GestureDetector(
-                        onTap: (){  Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return ProfilePage();
-                              },
-                          ),
-                        );},
+                        onTap: (){
+                  },
                         child: Container(
 
                           decoration: BoxDecoration(
@@ -142,7 +138,7 @@ class _CourseViewerState extends State<CourseViewer> {
                           height: 50.0,
                           child: Center(
                             child: Text(
-                                '\$52.00',
+                                widget.courseCredits +"  total credits",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Montserrat'
@@ -151,16 +147,15 @@ class _CourseViewerState extends State<CourseViewer> {
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ))
           ])
         ]));
 
-
   }
 
-  Widget _buildInfoCard(String cardTitle, String info, String unit) {
+  Widget _buildInfoCard(String cardTitle, String info, String courseDates) {
     return InkWell(
         onTap: () {
           selectCard(cardTitle);
@@ -170,11 +165,10 @@ class _CourseViewerState extends State<CourseViewer> {
             curve: Curves.easeIn,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color: cardTitle == selectedCard ? Color(0xFF7A9BEE) : Colors.white,
+              color: kPrimaryColor,
               border: Border.all(
-                  color: cardTitle == selectedCard ?
-                  Colors.transparent :
-                  Colors.grey.withOpacity(0.3),
+                  color:
+                  Colors.transparent ,
                   style: BorderStyle.solid,
                   width: 0.75
               ),
@@ -183,17 +177,16 @@ class _CourseViewerState extends State<CourseViewer> {
             height: 100.0,
             width: 100.0,
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, left: 15.0),
-                    child: Text(cardTitle,
+                    child: Text("course Description",
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 12.0,
-                          color:
-                          cardTitle == selectedCard ? Colors.white : Colors.grey.withOpacity(0.7),
+                          color: Colors.white,
                         )),
                   ),
                   Padding(
@@ -205,17 +198,15 @@ class _CourseViewerState extends State<CourseViewer> {
                             style: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 14.0,
-                                color: cardTitle == selectedCard
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: Colors.white,
+
                                 fontWeight: FontWeight.bold)),
-                        Text(unit,
+                        SizedBox(height: 20.0),
+                        Text(courseDates,
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: 12.0,
-                              color: cardTitle == selectedCard
-                                  ? Colors.white
-                                  : Colors.black,
+                              color: Colors.white,
                             ))
                       ],
                     ),
@@ -225,6 +216,7 @@ class _CourseViewerState extends State<CourseViewer> {
         )
     );
   }
+
 
   selectCard(cardTitle) {
     setState(() {

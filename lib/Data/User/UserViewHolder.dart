@@ -10,6 +10,7 @@ abstract class UserClient{
  static String logInUserEndPoint="https://soma.herokuapp.com/apo/v1/auth/authenticate";
 
   static Future<bool> SignUpUser(dynamic object) async{
+
     Uri url=Uri.parse(signUpEndPoint);
     var _payload=json.encode(object);
     var _headers={

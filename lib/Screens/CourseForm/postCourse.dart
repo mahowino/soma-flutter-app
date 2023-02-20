@@ -1,107 +1,118 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/CourseForm/DatePicker.dart';
+import 'package:flutter_auth/Screens/MainPage/Components/CourseCards.dart';
+import 'package:flutter_auth/components/background.dart';
+import 'package:flutter_auth/constants.dart';
 
 class CoursePostForm extends StatefulWidget {
-
-  const CoursePostForm({Key? key}) : super(key: key);
+final email;
+  const CoursePostForm(this.email);
 
   @override
   State<CoursePostForm> createState() => _CoursePostFormState();
 }
 
 class _CoursePostFormState extends State<CoursePostForm> {
+  TextEditingController courseNameController=TextEditingController();
+  TextEditingController courseDescriptionController=TextEditingController();
+  TextEditingController courseImageUrlController=TextEditingController();
+  TextEditingController courseCreditsController=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Course information"),
-        actions: <Widget>[
-          IconButton(icon: const Icon(Icons.save), onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return DatePicker();
-                },
-              ),
-            );
-          })
-        ],
+        backgroundColor: kPrimaryColor,
+        title: Text("Add course"),
+
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: const <Widget>[
+          child: ListView(
+            children:  <Widget>[
               SizedBox(height: 30,),
               ListTile(
-                leading: Icon(Icons.person),
+                leading: Icon(Icons.book),
                 title: TextField(
+                  controller: courseNameController,
                   decoration: InputDecoration(
-                    hintText: "Name",
+                    hintText: "Course name",
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 10,),
               ListTile(
-                leading: const Icon(Icons.phone),
+                leading: const Icon(Icons.book),
                 title: TextField(
+                  controller: courseDescriptionController,
                   decoration: InputDecoration(
-                    hintText: "Phone",
+                    hintText: "Course description",
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height:10,),
               ListTile(
-                leading: const Icon(Icons.email),
+                leading: const Icon(Icons.image),
                 title: TextField(
+                  controller: courseImageUrlController,
                   decoration: InputDecoration(
-                    hintText: "Email",
-                  ),
-                ),
-              ),
-              SizedBox(height: 20,),
-              const Divider(
-                height: 1.0,
-              ),
-              SizedBox(height: 20,),
-              ListTile(
-                leading: const Icon(Icons.person),
-                title: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Name",
-                  ),
-                ),
-              ),
-              SizedBox(height: 20,),
-              ListTile(
-                leading: const Icon(Icons.phone),
-                title: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Phone",
-                  ),
-                ),
-              ),
-              SizedBox(height: 20,),
-
-              ListTile(
-                leading: const Icon(Icons.email),
-                title: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Email",
+                    hintText: "course image url",
                   ),
                 ),
               ),
 
+              SizedBox(height: 10,),
+              ListTile(
+                leading: const Icon(Icons.money),
+                title: TextField(
+                  controller: courseCreditsController,
+                  decoration: InputDecoration(
+
+                    hintText: "course credits",
+                  ),),),
+              SizedBox(height: 30,),
+                  ElevatedButton(
+                    onPressed: () {
+                      String? courseName=courseNameController.text.toString();
+                      String? courseDescription=courseDescriptionController.text.toString();
+                      String? courseImageUrl=courseImageUrlController.text.toString();
+                      String? courseCredits=courseCreditsController.text.toString();
+
+                      isCourseValid(courseName,courseDescription,courseImageUrl,courseCredits)?
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DatePicker(courseName,courseDescription,courseImageUrl,courseCredits,widget.email);
+                          },
+
+                        ),
+                      ):
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Error posting course"),
+                      ));
+                    },
+                    child: Text("Add course"),
+                  ),
             ],
           ),
         ),
       ),
     );
   }
+
+  bool isCourseValid(String courseName, String courseDescription, String courseImageUrl, String courseCredits)
+  {
+    if(!courseName.isEmpty &&!courseDescription.isEmpty &&!courseImageUrl.isEmpty &&!courseCredits.isEmpty )
+      return true;
+    else
+      return false;
   }
+
+}
 
 
 

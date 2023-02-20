@@ -26,6 +26,8 @@ class _SignUpFormState extends State<SignUpForm> {
 
     TextEditingController emailController=TextEditingController();
     TextEditingController passwordController=TextEditingController();
+    TextEditingController firstNameController=TextEditingController();
+    TextEditingController lastNameController=TextEditingController();
 
     return Provider(
       create: (_)=>UserApiClass.create(),
@@ -33,17 +35,54 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Form(
         child: Column(
           children: [
-            TextFormField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              cursorColor: kPrimaryColor,
-              onSaved: (email) {},
-              decoration: const InputDecoration(
-                hintText: "Your email",
-                prefixIcon: Padding(
-                  padding: EdgeInsets.all(defaultPadding),
-                  child: Icon(Icons.person),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: defaultPadding),
+              child: TextFormField(
+                controller: firstNameController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: kPrimaryColor,
+                onSaved: (email) {},
+                decoration: const InputDecoration(
+                  hintText: "Your first name",
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(defaultPadding),
+                    child: Icon(Icons.person),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: defaultPadding),
+              child: TextFormField(
+                controller: lastNameController,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                cursorColor: kPrimaryColor,
+                onSaved: (email) {},
+                decoration: const InputDecoration(
+                  hintText: "Your last name",
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(defaultPadding),
+                    child: Icon(Icons.person),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: defaultPadding),
+              child: TextFormField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                cursorColor: kPrimaryColor,
+                onSaved: (email) {},
+                decoration: const InputDecoration(
+                  hintText: "Your email",
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(defaultPadding),
+                    child: Icon(Icons.person),
+                  ),
                 ),
               ),
             ),
@@ -68,11 +107,13 @@ class _SignUpFormState extends State<SignUpForm> {
               onPressed: () async {
                 String email=emailController.text.toString();
                 String password=passwordController.text.toString();
-                String? error=validatePass(email,password);
+                String firstName=passwordController.text.toString();
+                String lastName=passwordController.text.toString();
+                String? error=validatePass(firstName,lastName,email,password);
                 if(error==null){
                   User user=User();
-                  user.firstname="firstname";
-                  user.lastname="lastname";
+                  user.firstname=firstName;
+                  user.lastname=lastName;
                   user.email=email;
                   user.password=password;
 
@@ -86,7 +127,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     MaterialPageRoute(
                       builder: (context)  {
 
-                        return  MainPage();
+                        return  MainPage(email);
                       },
                     ),
                   );
@@ -126,6 +167,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 );
               },
             ),
+            const SizedBox(height: defaultPadding),
           ],
         ),
       ),
@@ -134,13 +176,20 @@ class _SignUpFormState extends State<SignUpForm> {
 
     }
 
-    String? validatePass(String email, String password) {
+    String? validatePass(String firstName, String lastName,String email, String password) {
       if (email.isEmpty) {
         return "email is empty";
       }
       if (password.isEmpty) {
         return "password is empty";
+
+      } if (firstName.isEmpty) {
+        return "firstName is empty";
       }
+      if (lastName.isEmpty) {
+        return "lastName is empty";
+      }
+
 
       if (password.length < 8) {
         return "password is too short";

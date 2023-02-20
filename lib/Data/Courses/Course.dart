@@ -4,9 +4,10 @@ Course courseFromJson(String str) => Course.fromJson(json.decode(str));
 
 String courseToJson(Course data) => json.encode(data.toJson());
 
+
 class Course {
   Course({
-    required this.courseId,
+    this.courseId,
     required this.courseName,
     required this.courseImageUrl,
     required this.courseDescription,
@@ -17,7 +18,8 @@ class Course {
     required this.courseDate,
   });
 
-  String courseId;
+
+  String? courseId;
   String courseName;
   String courseImageUrl;
   String courseDescription;

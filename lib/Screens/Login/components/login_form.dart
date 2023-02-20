@@ -73,7 +73,7 @@ class LoginForm extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context)  {
 
-                          return  MainPage();
+                          return  MainPage(email);
                         },
                       ),
                     );
