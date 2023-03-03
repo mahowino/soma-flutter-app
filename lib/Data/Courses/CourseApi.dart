@@ -47,8 +47,15 @@ abstract class CourseApi{
     }
   }
 
-  static Future<List> getScheduledCourses()async{
-    Uri uri=Uri.parse("https://soma.herokuapp.com/api/soma/scheduled");
+  static Future<List> getScheduledCourses(String userID)async{
+
+    final queryParameters = {
+      'user': userID,
+    };
+
+
+    Uri url=Uri.https("soma.herokuapp.com","/api/soma/scheduled",queryParameters);
+
     String? token = await storage.read(key: "token");
     print(token);
     var _headers={
@@ -56,7 +63,7 @@ abstract class CourseApi{
       'Content-Type':'application/json',
     };
     print(token);
-    var response=await client.get(uri,headers:_headers);
+    var response=await client.get(url,headers:_headers);
 
     if(response.statusCode==200){
       print(response.body);
@@ -71,8 +78,15 @@ abstract class CourseApi{
     }
 
   }
-  static Future<List> getCompletedCourses()async{
-    Uri uri=Uri.parse("https://soma.herokuapp.com/api/soma/completed");
+  static Future<List> getCompletedCourses(String userID)async{
+
+    final queryParameters = {
+      'user': userID,
+    };
+
+
+    Uri url=Uri.https("soma.herokuapp.com","/api/soma/completed",queryParameters);
+
     String? token = await storage.read(key: "token");
     print(token);
     var _headers={
@@ -80,7 +94,7 @@ abstract class CourseApi{
       'Content-Type':'application/json',
     };
     print(token);
-    var response=await client.get(uri,headers:_headers);
+    var response=await client.get(url,headers:_headers);
 
     if(response.statusCode==200){
       print(response.body);
@@ -95,8 +109,15 @@ abstract class CourseApi{
     }
 
   }
-  static Future<List> getOngoingCourses()async{
-    Uri uri=Uri.parse("https://soma.herokuapp.com/api/soma/ongoing");
+  static Future<List> getOngoingCourses(String userID)async{
+    final queryParameters = {
+      'userID': userID,
+    };
+
+
+    Uri url=Uri.https("soma.herokuapp.com","/api/soma/ongoing",queryParameters);
+
+
     String? token = await storage.read(key: "token");
     print(token);
     var _headers={
@@ -104,7 +125,7 @@ abstract class CourseApi{
       'Content-Type':'application/json',
     };
     print(token);
-    var response=await client.get(uri,headers:_headers);
+    var response=await client.get(url,headers:_headers);
 
     if(response.statusCode==200){
       print(response.body);

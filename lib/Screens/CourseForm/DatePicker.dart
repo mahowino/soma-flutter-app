@@ -92,10 +92,8 @@ class _State extends State<DatePicker> {
                     ),
                     IconsButton(
                       onPressed: () {
-                        setState(() {
-                          isSelected=true;
-                        });
-                        String? tutorId=Provider.of<AuthProvider>(context).user.userID;
+
+                        String? tutorId=Provider.of<AuthProvider>(context, listen: false).user.userID;
                         DateTime dateChosen=DateTime(picked.year,picked.month,picked.day,result.hour,result.minute,);
                         Course course=Course(
                             courseId: null,
@@ -110,6 +108,7 @@ class _State extends State<DatePicker> {
                         courseZoomLink: widget.courseZoomLink);
                         postCourse(course);
 
+                        Navigator.pop(context);
                       },
                       text: 'Post course',
                       iconData: Icons.save,
@@ -149,24 +148,29 @@ class _State extends State<DatePicker> {
 
     );
   }
-  void postCourse(dynamic course){
-    var isSuccess=CourseApi.postCourse(course);
+  void postCourse(dynamic course) async {
+    var isSuccess= await CourseApi.postCourse(course);
     if(isSuccess==true){
       setState(() {
         isSelected=false;
         isPosted=true;
       });
-
-/*      Navigator.push(
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("course posted")));
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) {
-           // User user=User.globalObject(email, token, userID, credits);
-            //return MainPage(user);
+           User user=Provider.of<AuthProvider>(context).user;
+           return MainPage(user);
           },
 
         ),
-      );*/
+      );
+    }
+    else{
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("error")));
     }
 
   }

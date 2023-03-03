@@ -70,8 +70,8 @@ class _CoursePostFormState extends State<CoursePostForm> {
                 leading: const Icon(Icons.money),
                 title: TextField(
                   controller: courseCreditsController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-
                     hintText: "course credits",
                   ),),),
               SizedBox(height: 10,),

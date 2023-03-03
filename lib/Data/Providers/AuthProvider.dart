@@ -13,6 +13,10 @@ class AuthProvider extends ChangeNotifier {
     _user = value;
   }
 
+  void chargeCredits(double credits){
+    user.credits=(user.credits! - credits);
+  }
+
   @override
   void updateUser(User user) {
     this._user=user;

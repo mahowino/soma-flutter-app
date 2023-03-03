@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Data/Providers/AuthProvider.dart';
 import 'package:flutter_auth/constants.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Data/Courses/CourseApi.dart';
@@ -24,21 +27,25 @@ class _MyCoursesState extends State<MyCourses> {
   void initState() {
     super.initState();
 
-    if(widget.route==scheduled_route){
-      courses=CourseApi.getScheduledCourses();
-    }
-    else if(widget.route==offered_courses_route){
-      courses=CourseApi.getOngoingCourses();
-    }
-    else{
-      courses=CourseApi.getCompletedCourses();
-    }
+
 
   }
   @override
   Widget build(BuildContext context) {
+    if(widget.route==scheduled_route){
+      String? userID=Provider.of<AuthProvider>(context).user.userID;
+      courses=CourseApi.getScheduledCourses(userID!);
+    }
+    else if(widget.route==offered_courses_route){
+      String? userID=Provider.of<AuthProvider>(context).user.userID;
+      courses=CourseApi.getOngoingCourses(userID!);
+    }
+    else{
+      String? userID=Provider.of<AuthProvider>(context).user.userID;
+      courses=CourseApi.getCompletedCourses(userID!);
+    }
     return  Scaffold(
-      appBar: AppBar(title: Text("Ongoing courses"),),
+      appBar: AppBar(title: Text("Courses"),),
       body: ListView(
         children: <Widget>[
           FutureBuilder<List>(
@@ -60,11 +67,15 @@ class _MyCoursesState extends State<MyCourses> {
 
                             scrollDirection: Axis.vertical,
                             shrinkWrap: true,
-                            itemBuilder: (context, index) =>
-                                _buildCourseItem(
-                                  'assets/images/icons8_books_48px.png',
-                                  snapshot.data?.elementAt(index).courseName,
-                                  snapshot.data?.elementAt(index).courseDescription,),
+                            itemBuilder: (context, index) =>_buildCourseItem(
+                            'assets/images/icons8_books_48px.png',
+                            snapshot.data?.elementAt(index).courseId,
+                            snapshot.data?.elementAt(index).courseTutor,
+                            snapshot.data?.elementAt(index).courseName,
+                            snapshot.data?.elementAt(index).courseDescription,
+                            snapshot.data!.elementAt(index).courseCredits.toString(),
+                            formattedDateTime(snapshot.data!.elementAt(index).courseDate),
+                            context,),
                             itemCount: snapshot.data?.length),
                       );
                     }
@@ -80,17 +91,19 @@ class _MyCoursesState extends State<MyCourses> {
           _buildCourseItem('assets/images/user_icon_male.png',"","",),
           _buildCourseItem('assets/images/user_icon_male.png',"","",),
           _buildCourseItem('assets/images/user_icon_male.png',"","",),*/
+
         ],
       ),
     );
   }
-  Widget _buildCourseItem(String imgPath, String courseName, String courseDescription ){
+  Widget _buildCourseItem(String imgPath,String ID, String tutor_ID, String courseName, String courseDescription,String courseCredits, String courseDates,BuildContext context ){
     return Padding(
       padding: EdgeInsets.only(left: 10.0,right: 10.0),
       child: InkWell(
         onTap: (){
+
           if(widget.route==scheduled_route){
-           _launchURL();
+            _launchURL();
           }
         },
 
@@ -109,13 +122,13 @@ class _MyCoursesState extends State<MyCourses> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Engineering",
+                Text(courseName,
                   style: TextStyle(
                     fontSize: 17.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text("Engineering",
+                Text(courseDescription,
                   style: TextStyle(
                       fontSize: 15.0,
                       color: Colors.grey
@@ -138,5 +151,11 @@ class _MyCoursesState extends State<MyCourses> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+  String formattedDateTime(DateTime now){
+
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String formatted = formatter.format(now);
+    return formatted;
   }
 }

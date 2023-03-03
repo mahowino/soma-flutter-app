@@ -268,12 +268,12 @@ class _CourseViewerState extends State<CourseViewer> {
             actions: <Widget>[
               TextButton(
                 child: const Text('Approve'),
-                onPressed: () {
+                onPressed: () async{
                   double? userCredits=Provider.of<AuthProvider>(context,  listen: false).user.credits;
                   String? userID=Provider.of<AuthProvider>(context, listen: false).user.userID;
                   if(courseCredits<userCredits!){
                     print(userID);
-                    var isSuccess=CourseApi.scheduleCourse(course,userID!);
+                    var isSuccess= await CourseApi.scheduleCourse(course,userID!);
                     if(isSuccess==true) {
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -282,19 +282,20 @@ class _CourseViewerState extends State<CourseViewer> {
                       Navigator.push(context,
                           MaterialPageRoute(
                               builder: (context){
-
+                                Provider.of<AuthProvider>(context).chargeCredits(courseCredits);
                               return MainPage(Provider.of<AuthProvider>(context).user);
                               })
-
                       );
                     }
                     else{
+                      Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Error booking course"),
+                        content: Text("Course already boked"),
                       ));
                     }
                   }
                   else{
+                    Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text("Top up credits to book course"),
                     ));
