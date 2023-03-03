@@ -13,6 +13,10 @@ const kLightPrimaryColor = Color(0xFFFFFFFF);
 const kLightSecondaryColor = Color(0xFFF3F7FB);
 const kAccentColor = Color(0xFFFFC107);
 
+const scheduled_route=1;
+const offered_courses_route=2;
+const completed_route=3;
+
 final kTitleTextStyle = TextStyle(
   fontSize: 17,
   fontWeight: FontWeight.w600,

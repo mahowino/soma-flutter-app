@@ -117,8 +117,9 @@ class _SignUpFormState extends State<SignUpForm> {
                   user.email=email;
                   user.password=password;
 
-                  var response=await UserClient.SignUpUser(user.toJson());
-                  if(response==true){
+                  User? response=await UserClient.SignUpUser(user.toJson());
+                  if(response!=null){
+
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text("successful sign up"),
                     ));
@@ -127,7 +128,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     MaterialPageRoute(
                       builder: (context)  {
 
-                        return  MainPage(email);
+                        return  MainPage(response);
                       },
                     ),
                   );

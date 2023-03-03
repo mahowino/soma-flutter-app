@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Data/Courses/CourseApi.dart';
+import '../Mpesa/MpesaForm.dart';
 import '../Profile/Widget/profile_list_item.dart';
 import '../SpecificCourse/SpecificCoursePage.dart';
 
 class MyCourses extends StatefulWidget {
 
-  const MyCourses({Key? key}) : super(key: key);
+  final route;
+  MyCourses(this.route);
 
 
   @override
@@ -19,7 +23,17 @@ class _MyCoursesState extends State<MyCourses> {
   @override
   void initState() {
     super.initState();
-    courses=CourseApi.getAvailableCourses();
+
+    if(widget.route==scheduled_route){
+      courses=CourseApi.getScheduledCourses();
+    }
+    else if(widget.route==offered_courses_route){
+      courses=CourseApi.getOngoingCourses();
+    }
+    else{
+      courses=CourseApi.getCompletedCourses();
+    }
+
   }
   @override
   Widget build(BuildContext context) {
@@ -75,15 +89,9 @@ class _MyCoursesState extends State<MyCourses> {
       padding: EdgeInsets.only(left: 10.0,right: 10.0),
       child: InkWell(
         onTap: (){
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return CourseViewer(imgPath,courseName,courseDescription,"12",
-                "");
-              },
-            ),
-          );
+          if(widget.route==scheduled_route){
+           _launchURL();
+          }
         },
 
         child: Row(
@@ -121,5 +129,14 @@ class _MyCoursesState extends State<MyCourses> {
         ),
       ),
     );
+  }
+  _launchURL() async {
+    const url = 'https://flutter.io';
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

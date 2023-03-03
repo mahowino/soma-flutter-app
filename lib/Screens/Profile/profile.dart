@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/MySchedule/MySchedule.dart';
 import 'package:flutter_auth/Screens/SpecificCourse/SpecificCoursePage.dart';
 import 'package:flutter_auth/constants.dart';
+import 'package:flutter_auth/main.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 
+import '../../Data/Providers/AuthProvider.dart';
 import '../CourseForm/postCourse.dart';
+import '../Mpesa/MpesaForm.dart';
 import 'Widget/profile_list_item.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -57,22 +62,31 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: kTitleTextStyle,
                 ),
                 SizedBox(height: kSpacingUnit * 0.5),
+
                 Text(
-                  '2000 credits',
+                  Provider.of<AuthProvider>(context).user.credits.toString() + " credits",
                   style: kCaptionTextStyle,
                 ),
                 SizedBox(height: kSpacingUnit * 2),
-                Container(
-                  height: kSpacingUnit * 4,
-                  width: kSpacingUnit * 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(kSpacingUnit * 3),
-                    color: Colors.white,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Top Up Credits',
-                      style: kButtonTextStyle,
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context)=>Mpesa()),
+                    );
+
+                  },
+                  child: Container(
+                    height: kSpacingUnit * 4,
+                    width: kSpacingUnit * 20,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(kSpacingUnit * 3),
+                      color: Colors.white,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Top Up Credits',
+                        style: kButtonTextStyle,
+                      ),
                     ),
                   ),
                 ),
@@ -88,12 +102,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: (){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyCourses()),
+                    MaterialPageRoute(builder: (context) => MyCourses(scheduled_route)),
                   );
                 },
-                child: ProfileListItem(
+                child: const ProfileListItem(
                   icon: Icons.access_time_filled_outlined,
-                  text: 'ongoing courses',
+                  text: 'scheduled courses',
                 ),
               ),
               GestureDetector(
@@ -103,27 +117,62 @@ class _ProfilePageState extends State<ProfilePage> {
                     MaterialPageRoute(builder: (context) => CoursePostForm(widget.email)),
                   );
                 },
-                child: ProfileListItem(
+                child: const ProfileListItem(
                   icon: Icons.access_time_filled_outlined,
                   text: 'Offer course',
                 ),
               ),
-              ProfileListItem(
-                icon: Icons.access_time_filled_outlined,
-                text: 'My schedule',
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyCourses(offered_courses_route)),
+                  );
+                },
+                child: const ProfileListItem(
+                  icon: Icons.access_time_filled_outlined,
+                  text: 'offered courses',
+                ),
               ),
-              ProfileListItem(
-                icon: Icons.access_time_filled_outlined,
-                text: 'Completed classes',
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyCourses(completed_route)),
+                  );
+                },
+                child: const ProfileListItem(
+                  icon: Icons.access_time_filled_outlined,
+                  text: 'Completed classes',
+                ),
               ),
-              ProfileListItem(
-                icon: Icons.access_time_filled_outlined,
-                text: 'Invite a Friend',
-              ),
-              ProfileListItem(
-                icon: Icons.access_time_filled_outlined,
-                text: 'Logout',
-                hasNavigation: false,
+              GestureDetector(
+                onTap: () async {
+
+                  FlutterSecureStorage storage = FlutterSecureStorage();
+                  storage.deleteAll();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation,
+                          Animation secondaryAnimation) {
+                        return const MyApp();
+                      }, transitionsBuilder: (BuildContext context, Animation<double> animation,
+                          Animation<double> secondaryAnimation, Widget child) {
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(1.0, 0.0),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: child,
+                        );
+                      }),
+                          (Route route) => false);
+                },
+                child: const ProfileListItem(
+                  icon: Icons.access_time_filled_outlined,
+                  text: 'Logout',
+                  hasNavigation: false,
+                ),
               ),
             ],
           )

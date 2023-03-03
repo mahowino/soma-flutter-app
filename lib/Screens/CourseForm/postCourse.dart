@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_auth/Screens/CourseForm/DatePicker.dart';
 import 'package:flutter_auth/Screens/MainPage/Components/CourseCards.dart';
 import 'package:flutter_auth/components/background.dart';
@@ -18,6 +19,7 @@ class _CoursePostFormState extends State<CoursePostForm> {
   TextEditingController courseDescriptionController=TextEditingController();
   TextEditingController courseImageUrlController=TextEditingController();
   TextEditingController courseCreditsController=TextEditingController();
+  TextEditingController courseZoomLinkController=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -72,21 +74,34 @@ class _CoursePostFormState extends State<CoursePostForm> {
 
                     hintText: "course credits",
                   ),),),
+              SizedBox(height: 10,),
+              ListTile(
+                leading: const Icon(Icons.money),
+                title: TextField(
+                  controller: courseZoomLinkController,
+                  decoration: InputDecoration(
+
+                    hintText: "course zoom link",
+                  ),),),
               SizedBox(height: 30,),
                   ElevatedButton(
                     onPressed: () {
+
+
                       String? courseName=courseNameController.text.toString();
                       String? courseDescription=courseDescriptionController.text.toString();
                       String? courseImageUrl=courseImageUrlController.text.toString();
                       String? courseCredits=courseCreditsController.text.toString();
+                      String? courseZoomLink=courseZoomLinkController.text.toString();
 
-                      isCourseValid(courseName,courseDescription,courseImageUrl,courseCredits)?
+
+                      isCourseValid(courseName,courseDescription,courseImageUrl,courseCredits,courseZoomLink)?
 
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return DatePicker(courseName,courseDescription,courseImageUrl,courseCredits,widget.email);
+                            return DatePicker(courseName,courseDescription,courseImageUrl,courseCredits,widget.email,courseZoomLink);
                           },
 
                         ),
@@ -104,9 +119,9 @@ class _CoursePostFormState extends State<CoursePostForm> {
     );
   }
 
-  bool isCourseValid(String courseName, String courseDescription, String courseImageUrl, String courseCredits)
+  bool isCourseValid(String courseName, String courseDescription, String courseImageUrl, String courseCredits, String courseZoomLink)
   {
-    if(!courseName.isEmpty &&!courseDescription.isEmpty &&!courseImageUrl.isEmpty &&!courseCredits.isEmpty )
+    if(!courseName.isEmpty &&!courseDescription.isEmpty &&!courseImageUrl.isEmpty &&!courseCredits.isEmpty &&!courseZoomLink.isEmpty )
       return true;
     else
       return false;

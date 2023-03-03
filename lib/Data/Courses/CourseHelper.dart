@@ -15,6 +15,7 @@ abstract class CourseHelper{
         coursePaymentDetails: json[x]["coursePaymentDetails"],
         courseCredits: json[x]["courseCredits"],
         courseDate: DateTime.parse(json[x]["courseDate"]),
+        courseZoomLink: json[x]["courseZoomLink"],
       ));
     }
     return list;

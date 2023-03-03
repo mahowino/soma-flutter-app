@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Data/Courses/Course.dart';
 import 'package:flutter_auth/Data/Courses/CourseApi.dart';
+import 'package:flutter_auth/Data/User/User.dart';
 import 'package:flutter_auth/constants.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:material_dialogs/widgets/buttons/icon_button.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../Data/Providers/AuthProvider.dart';
 import '../MainPage/Mainpage.dart';
 
 class DatePicker extends StatefulWidget {
@@ -19,9 +21,10 @@ class DatePicker extends StatefulWidget {
   final courseDescription;
   final courseImageUrl;
   final courseCredits;
+  final courseZoomLink;
   final email;
 
-  DatePicker(this.courseName,this.courseDescription,this.courseImageUrl,this.courseCredits,this.email);
+  DatePicker(this.courseName,this.courseDescription,this.courseImageUrl,this.courseCredits,this.email,this.courseZoomLink);
   
   @override
   _State createState() => _State();
@@ -35,6 +38,8 @@ class _State extends State<DatePicker> {
   var isSelected=false;
   var isPosted=false;
   TimeOfDay result=TimeOfDay(hour: 00, minute: 00);
+
+
 
   Future _selectDate() async {
      picked = (await showDatePicker(
@@ -90,17 +95,19 @@ class _State extends State<DatePicker> {
                         setState(() {
                           isSelected=true;
                         });
+                        String? tutorId=Provider.of<AuthProvider>(context).user.userID;
                         DateTime dateChosen=DateTime(picked.year,picked.month,picked.day,result.hour,result.minute,);
                         Course course=Course(
                             courseId: null,
                             courseName: widget.courseName,
                             courseImageUrl: widget.courseImageUrl,
                             courseDescription: widget.courseDescription,
-                            courseTutor: "mahalon",
+                            courseTutor: tutorId,
                             coursePaymentStatus: false,
                             coursePaymentDetails: false,
                             courseCredits: int.parse(widget.courseCredits.toString()),
-                            courseDate: dateChosen);
+                            courseDate: dateChosen,
+                        courseZoomLink: widget.courseZoomLink);
                         postCourse(course);
 
                       },
@@ -150,15 +157,16 @@ class _State extends State<DatePicker> {
         isPosted=true;
       });
 
-      Navigator.push(
+/*      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) {
-            return MainPage(widget.email);
+           // User user=User.globalObject(email, token, userID, credits);
+            //return MainPage(user);
           },
 
         ),
-      );
+      );*/
     }
 
   }

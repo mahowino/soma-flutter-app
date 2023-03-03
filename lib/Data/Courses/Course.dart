@@ -16,10 +16,12 @@ class Course {
     required this.coursePaymentDetails,
     required this.courseCredits,
     required this.courseDate,
+    required this.courseZoomLink
   });
 
 
   String? courseId;
+  String courseZoomLink;
   String courseName;
   String courseImageUrl;
   String courseDescription;
@@ -39,6 +41,8 @@ class Course {
     coursePaymentDetails: json["coursePaymentDetails"],
     courseCredits: json["courseCredits"],
     courseDate: DateTime.parse(json["courseDate"]),
+    courseZoomLink:"courseZoomLink",
+  /*  courseZoomLink: json["courseZoomLink"],*/
   );
 
   Map<String, dynamic> toJson() => {

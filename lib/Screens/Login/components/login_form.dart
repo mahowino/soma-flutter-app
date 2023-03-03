@@ -64,7 +64,13 @@ class LoginForm extends StatelessWidget {
                   user.password=password;
 
                   var response=await UserClient.logInUser(user.toJson());
-                  if(response==true){
+                  if(response!=null){
+
+                    print(response.credits);
+                    print(response.userID);
+                    print(response.token);
+                    print(response.email);
+
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text("successful sign in"),
                     ));
@@ -73,7 +79,7 @@ class LoginForm extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context)  {
 
-                          return  MainPage(email);
+                          return  MainPage(response);
                         },
                       ),
                     );
