@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
+import 'package:provider/provider.dart';
 
+import '../../Data/Providers/AuthProvider.dart';
 import '../../constants.dart';
 
 class Mpesa extends StatefulWidget {
@@ -72,6 +74,8 @@ class _MpesaState extends State<Mpesa> {
                       dynamic transactionInitialisation;
                       //Wrap it with a try-catch
                       try {
+                        var uid=Provider.of<AuthProvider>(context).user.userID;
+
                         //Run it
                         transactionInitialisation =
                         await MpesaFlutterPlugin.initializeMpesaSTKPush(
@@ -80,7 +84,7 @@ class _MpesaState extends State<Mpesa> {
                             amount: double.parse(amountToPay),
                             partyA: phone,
                             partyB: "174379",
-                            callBackURL: Uri.parse("https://developer.safaricom.co.ke/APIs/MpesaExpressSimulate"),
+                            callBackURL: Uri.parse("https://us-central1-soma-f84cc.cloudfunctions.net/callbackUrl?userid="+uid!),
                             accountReference: "123123",
                             phoneNumber: phone,
                             baseUri: Uri.parse("https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"),
