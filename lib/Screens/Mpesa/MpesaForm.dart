@@ -47,6 +47,7 @@ class _MpesaState extends State<Mpesa> {
                 padding: const EdgeInsets.symmetric(vertical: defaultPadding),
                 child: TextFormField(
                   controller: amount,
+                  keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.done,
                   obscureText: true,
                   cursorColor: kPrimaryColor,
@@ -74,13 +75,14 @@ class _MpesaState extends State<Mpesa> {
                       dynamic transactionInitialisation;
                       //Wrap it with a try-catch
                       try {
-                        var uid=Provider.of<AuthProvider>(context).user.userID;
+
+                        var uid=Provider.of<AuthProvider>(context, listen: false).user.userID;
 
                         //Run it
                         transactionInitialisation =
                         await MpesaFlutterPlugin.initializeMpesaSTKPush(
                             businessShortCode: "174379",//use your store number if the transaction type is CustomerBuyGoodsOnline
-                            transactionType: TransactionType.CustomerBuyGoodsOnline, //or CustomerBuyGoodsOnline for till numbers
+                            transactionType: TransactionType.CustomerPayBillOnline, //or CustomerBuyGoodsOnline for till numbers
                             amount: double.parse(amountToPay),
                             partyA: phone,
                             partyB: "174379",
@@ -92,6 +94,11 @@ class _MpesaState extends State<Mpesa> {
                             passKey: "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919");
 
                         print(transactionInitialisation);
+
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("write pin and credits will be topped up"),
+                        ));
 
                       } catch (e) {
                         //you can implement your exception handling here.
@@ -105,7 +112,7 @@ class _MpesaState extends State<Mpesa> {
     4. Phone number not in international format(should start with 254 for KE)
      */
 
-                        print("error");
+                        print(e);
                       }
 
                     }
@@ -138,9 +145,7 @@ class _MpesaState extends State<Mpesa> {
       return "amount is empty";
     }
 
-    if (phone.length !=12 ) {
-      return "write valid number";
-    }
+
 
     return null;
   }
